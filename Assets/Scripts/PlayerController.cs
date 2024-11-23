@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour {
        playerAudio.Play(); // 사망효과음 재생
        playerRigidbody.linearVelocity = Vector2.zero; // 속도를 제로(0, 0)로 만듦
        isDead = true;
+       GameManager.instance.OnPlayerDead(); // 게임 매니저의 플레이어 사망 처리 실행
    }
 
    private void OnTriggerEnter2D(Collider2D other) {
