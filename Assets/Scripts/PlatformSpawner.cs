@@ -22,9 +22,32 @@ public class PlatformSpawner : MonoBehaviour {
 
     void Start() {
         // 변수들을 초기화하고 사용할 발판들을 미리 생성
+        platforms = new GameObject[count];
+        for(int i = 0; i < count; i++)
+        {
+            platforms[i] = Instantiate(platformPrefab, poolPosition, Quaternion.identity);
+        }
+        lastSpawnTime = 0f;
+        timeBetSpawn = 0f;
     }
 
     void Update() {
         // 순서를 돌아가며 주기적으로 발판을 배치
+        if(GameManager.instance.isGameover) return;
+        if(Time.time >= lastSpawnTime + timeBetSpawn)
+        {
+            lastSpawnTime = Time.time;
+            timeBetSpawn = Random.Range(timeBetSpawnMin, timeBetSpawnMax);
+            float yPos = Random.Range(yMin, yMax);
+
+            // 발판 보드젝트를 껐다켜서, 해당 발판 게임 오브젝트의 상태를 리셋한다.
+            // Platform 스크립트는 발판의 상태를 리셋하고 무작위로 장애물 오브젝트를 활성화한다.
+            platforms[currentIndex].SetActive(false);
+            platforms[currentIndex].SetActive(true); 
+
+            platforms[currentIndex].transform.position = new Vector2(xPos, yPos);
+            currentIndex++;
+            if(currentIndex >= count) currentIndex = 0; // 마지막 순번이라면 순번리셋
+        }
     }
 }
